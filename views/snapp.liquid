@@ -1,0 +1,38 @@
+{% render 'partials/head.liquid', title: 'Snapp' %}
+
+    {% render 'partials/topbar-snapp.liquid', snapp: snapp, snapmap: snapmap %}
+
+    <main>
+
+        <article class="group-name">
+            <img src="/assets/svg/group_blue.svg">
+            <h1>{{ groupName }}</h1> 
+        </article>
+
+        <article class="snapp-detail">
+            {% if snapp %}
+                <img src="https://fdnd-agency.directus.app/assets/{{ snapp.picture.id }}" alt="Foto">
+
+                <div class="button-filter-container">
+                    {% for group in groups %}
+                        {% for item in group.snappmap %}
+                            {% assign mapObject = item.snappthis_snapmap_uuid %}
+                            
+                            {% if mapObject.uuid == snapmap.uuid %}
+                                <button>{{ mapObject.name }}</button>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+
+                    <button>{{ snapp.author.name }}</button>
+                    
+                    <button>{{ snapp.location }}</button>
+                    
+                    <p>{{ snapp.date_created | date: "%d %B %Y %H:%M" }}</p>
+                </div>
+            {% endif %}
+        </article>
+    </main>
+
+    {% render 'partials/bottombar.liquid' %}
+</body>

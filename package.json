@@ -1,7 +1,7 @@
 {
-  "name": "user-experience-enhanced-website",
+  "name": "the-web-is-for-everyone-interactive-functionality",
   "version": "1.0.0",
-  "description": "Ontwerp en maak een website voor een opdrachtgever waarbij je de website verrijkt volgens het principe van progressive enhancement.",
+  "description": "Ontwerp en maak voor een opdrachtgever een interactieve toepassing die voor iedereen toegankelijk is.",
   "main": "server.js",
   "type": "module",
   "directories": {
@@ -10,18 +10,21 @@
   "scripts": {
     "start": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fdnd-task/user-experience-enhanced-website.git"
-  },
+  "keywords": [
+    "node",
+    "express",
+    "liquid",
+    "progressive enhancement"
+  ],
   "author": "J.P. Sturkenboom <j.p.sturkenboom@hva.nl>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fdnd-task/user-experience-enhanced-website/issues"
+    "url": "https://github.com/fdnd-task/the-web-is-for-everyone-interactive-functionality/issues"
   },
-  "homepage": "https://github.com/fdnd-task/user-experience-enhanced-website#readme",
+  "homepage": "https://github.com/fdnd-task/the-web-is-for-everyone-interactive-functionality#readme",
   "dependencies": {
-    "express": "^5.0.1",
-    "liquidjs": "^10.21.0"
+    "express": "latst",
+    "liquidjs": "latest",
+    "multer": "^2.1.1"
   }
 }
