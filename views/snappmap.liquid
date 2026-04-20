@@ -46,20 +46,71 @@
 </body>
 
 <script>
+  const successPopup = document.getElementById('successPopup')
+  const successPopupText = document.getElementById('successPopup h2')
+  const formButton = document.querySelector("form input")
+
   window.addEventListener('load', () => {
     const urlParams = new URLSearchParams(window.location.search);
     
     // Als 'success' in de URL staat, toon de popup
     if (urlParams.get('success') === 'true') {
-      document.getElementById('successPopup').style.display = 'flex';
+      successPopup.style.display = 'flex';
     }
   });
 
   // Functie om de popup te sluiten
   function closePopup() {
-    document.getElementById('successPopup').style.display = 'none';
+    successPopup.style.display = 'none';
     
     const newUrl = window.location.pathname;
     window.history.replaceState({}, document.title, newUrl);
   }
+
+  const snappUploadForm = document.querySelector("form")
+
+  // Als er op de submit button wordt geklikt ...
+  snappUploadForm.addEventListener("submit", async function(event) {
+    // Voorkom de standaard submit van de browser
+    event.preventDefault()
+    
+    //Loading state tonen:
+    successPopup.style.display = 'flex';
+    successPopupText.textContent = "Uploading..."
+
+    //formdata voorbereiden:
+    let formData = new FormData(scoreForm);    
+
+    // Data fetchen:
+    // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
+    // Gebruik daarvoor het action en method attribuut van het formulier
+    // Stuur de formulierelementen mee
+    const response = await fetch(scoreForm.action, {
+      method: scoreForm.method, //POST dus
+      body: new URLSearchParams(formData) // <<< Dit moet omdat server.js anders niet met de formulier data kan werken
+    })
+
+    // Data verwerken:
+    // De server geeft data terug als het posten goed gaat
+    const responseData = await response.text()
+
+    // Normaal zou de browser die HTML parsen en weergeven, maar daar moeten we nu zelf iets mee
+    // Parse de nieuwe HTML en maak hiervan een nieuw Document Object Model in het geheugen
+    const parser = new DOMParser()
+    const responseDOM = parser.parseFromString(responseData, 'text/html')
+
+    // Zoek in die nieuwe HTML DOM onze nieuwe UI state op, die we via Liquid hebben klaargemaakt
+    const newState = responseDOM.querySelector('#score ol')
+
+    // data van de server toevoegen aan de DOM, aan de scorelijst in de ol
+    // Overschrijf de HTML met de nieuwe HTML
+    scores.innerHTML = newState.innerHTML
+
+    // Loading state weghalen
+    // Nu kan je waarschijnlijk de Loading state vervangen door een Success state
+    console.log("Loading state weghalen")
+    formButton.classList.remove("loading")
+    formButton.textContent = "Save score"
+
+  })
 </script>
