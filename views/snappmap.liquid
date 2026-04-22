@@ -4,7 +4,7 @@
     {% render 'partials/topbar.liquid', snapmap: snapmap %}
 
     <article class="group-name">
-      <img src="/assets/svg/group_blue.svg">
+      <img src="/assets/svg/group_blue.svg" width="30px" height="30px">
       <h1>{{ groupName }}</h1> 
     </article>
 
@@ -20,7 +20,7 @@
     <article class="camera-button-container">
       <form method="POST" action="/snappmaps/{{ snapmap.uuid }}" enctype="multipart/form-data">
         <label for="picture">
-          <img src="/assets/svg/camera.svg">
+          <img src="/assets/svg/camera.svg" width="60px" height="60px">
           <input type="file" id="picture" name="file" accept="image/*" capture="environment" onchange="this.form.submit()">
         </label>
       </form>
@@ -28,17 +28,20 @@
 
     <ul class="photo-grid">
       {% for item in snappmaps %}
-        {% assign sorted_snaps = item.snaps | sort: "date_created" | reverse %}
-          {% for snap in sorted_snaps %}
-            {% if snap.picture.id != null %}
-              <li>
-                <a href="/snapps/snappmap/{{ snap.uuid }}">
-                  <img type="image/webp" src="https://fdnd-agency.directus.app/assets/{{ snap.picture.id }}?format=webp">
-                </a>
-              </li>
-            {% endif %}
-          {% endfor %}
+      {% assign sorted_snaps = item.snaps | sort: "date_created" | reverse %}
+        {% for snap in sorted_snaps %}
+          {% if snap.picture.id != null %}
+            <li>
+              <a href="/snapps/snappmap/{{ snap.uuid }}">
+                <img 
+                  type="image/webp" 
+                  src="https://fdnd-agency.directus.app/assets/{{ snap.picture.id }}?width=200&format=webp" 
+                  loading="lazy">
+              </a>
+            </li>
+          {% endif %}
         {% endfor %}
+      {% endfor %}
     </ul>
 
     {% render 'partials/bottombar.liquid' %}
