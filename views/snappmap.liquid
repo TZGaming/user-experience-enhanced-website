@@ -101,7 +101,7 @@
         photoGrid.innerHTML = newGrid.innerHTML;
       }
     } catch (err) {
-      // refresh failed, keep current grid
+      // als refresh faalt, behoudt bestaande grid dan
     }
   }
 
@@ -160,7 +160,7 @@
       const result = await response.json();
 
       if (response.ok && result.success) {
-        // Switch naar success state (zonder reload!)
+        // Switch naar success state
         await refreshPhotoGrid();
         if (successPopupButton) {
           successPopupButton.style.display = 'flex';
