@@ -88,11 +88,7 @@
     }
 
     try {
-      const pageResponse = await fetch(window.location.href, {
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
-        }
-      });
+      const pageResponse = await fetch(window.location.href);
       const pageText = await pageResponse.text();
       const parser = new DOMParser();
       const pageDoc = parser.parseFromString(pageText, 'text/html');
