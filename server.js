@@ -137,7 +137,10 @@ app.post("/snappmaps/:uuid", upload.single("file"), async (req, res) => {
     const file = req.file;
 
     if (!file) {
-      return res.send("No file uploaded");
+      return res.status(400).json({ 
+        success: false, 
+        message: "No file uploaded" 
+      });
     }
 
     // Get uuid from route
@@ -171,7 +174,10 @@ app.post("/snappmaps/:uuid", upload.single("file"), async (req, res) => {
     const imageId = uploadResponseData?.data?.id;
 
     if (!imageId) {
-      return res.send("Upload failed: No file ID returned");
+      return res.status(400).json({ 
+        success: false, 
+        message: "Upload failed: No file ID returned" 
+      });
     }
 
     const newSnap = {
@@ -203,25 +209,27 @@ app.post("/snappmaps/:uuid", upload.single("file"), async (req, res) => {
     console.log("Snap response:", snapData);
 
     if (snapResponse.ok) {
-        // We sturen de gebruiker terug naar de pagina waar ze vandaan kwamen
-        // We voegen een 'query param' toe: ?success=true
-        return res.redirect(`/snappmaps/${snappmapuuid}?success=true`);
+        // Stuur JSON terug zodat de client-side geen reload doet
+        return res.json({ 
+          success: true, 
+          message: "Snap successfully created" 
+        });
     }
 
-    res.send(`
-      <h2>✅ Success 🎉</h2>
-      <p>File ID: ${imageId}</p>
-      <pre>${JSON.stringify(snapData, null, 2)}</pre>
-      <a href="/">Go back</a>
-    `);
+    res.status(snapResponse.status).json({ 
+      success: false, 
+      message: "Failed to create snap",
+      error: snapData 
+    });
 
   } catch (err) {
     console.error("REAL ERROR:", err);
 
-    res.status(500).send(`
-      <h2>💥 Server Error</h2>
-      <pre>${err.message}</pre>
-    `);
+    res.status(500).json({ 
+      success: false, 
+      message: "Server error",
+      error: err.message 
+    });
   }
 });
  

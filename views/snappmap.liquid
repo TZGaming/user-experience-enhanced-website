@@ -11,7 +11,7 @@
     <div id="successPopup" class="popup-overlay" style="display: none;">
       <div class="popup-content">
         <h2>Your snapp has been added successfully!</h2>
-        <button onclick="closePopup()">
+        <button id="successPopupButton" onclick="closePopup()">
           <p>OK</p>
         </button>
       </div>
@@ -21,7 +21,7 @@
       <form method="POST" action="/snappmaps/{{ snapmap.uuid }}" enctype="multipart/form-data">
         <label for="picture">
           <img src="/assets/svg/camera.svg" width="60px" height="60px">
-          <input type="file" id="picture" name="file" accept="image/*" capture="environment" onchange="this.form.submit()">
+          <input type="file" id="picture" name="file" accept="image/*" capture="environment">
         </label>
       </form>
     </article>
@@ -50,8 +50,9 @@
 
 <script>
   const successPopup = document.getElementById('successPopup')
-  const successPopupText = document.getElementById('successPopup h2')
-  const formButton = document.querySelector("form input")
+  const successPopupText = document.querySelector('#successPopup h2')
+  const successPopupButton = document.getElementById('successPopupButton')
+  const successPopupIcon = document.createElement('img')
 
   window.addEventListener('load', () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -59,6 +60,13 @@
     // Als 'success' in de URL staat, toon de popup
     if (urlParams.get('success') === 'true') {
       successPopup.style.display = 'flex';
+      if (successPopupText) {
+        successPopupText.textContent = "Your snapp has been added successfully!";
+      }
+      if (successPopupButton) {
+        successPopupButton.style.display = 'flex';
+      }
+      successPopupIcon.remove();
     }
   });
 
@@ -71,49 +79,108 @@
   }
 
   const snappUploadForm = document.querySelector("form")
+  const fileInput = document.getElementById("picture")
+  const photoGrid = document.querySelector(".photo-grid")
+
+  async function refreshPhotoGrid() {
+    if (!photoGrid) {
+      return;
+    }
+
+    try {
+      const pageResponse = await fetch(window.location.href, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
+      const pageText = await pageResponse.text();
+      const parser = new DOMParser();
+      const pageDoc = parser.parseFromString(pageText, 'text/html');
+      const newGrid = pageDoc.querySelector('.photo-grid');
+      if (newGrid) {
+        photoGrid.innerHTML = newGrid.innerHTML;
+      }
+    } catch (err) {
+      // refresh failed, keep current grid
+    }
+  }
+
+  // Wanneer een bestand wordt gekozen, submit het form (triggert submit event)
+  fileInput.addEventListener("change", function() {
+    snappUploadForm.dispatchEvent(new Event('submit'));
+  });
 
   // Als er op de submit button wordt geklikt ...
   snappUploadForm.addEventListener("submit", async function(event) {
     // Voorkom de standaard submit van de browser
     event.preventDefault()
     
-    //Loading state tonen:
+    // Loading state tonen met icoon
     successPopup.style.display = 'flex';
-    successPopupText.textContent = "Uploading..."
+    if (successPopupButton) {
+      successPopupButton.style.display = 'none';
+    }
+    
+    // Maak loading icoon
+    successPopupIcon.src = '/assets/svg/Loading.svg';
+    successPopupIcon.width = '50';
+    successPopupIcon.height = '50';
+    successPopupIcon.style.marginBottom = '15px';
+    successPopupIcon.style.animation = 'spin 1s linear infinite';
+    
+    // Voeg styling toe voor spin animatie
+    if (!document.querySelector('#loadingStyle')) {
+      const style = document.createElement('style');
+      style.id = 'loadingStyle';
+      style.textContent = `
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    if (successPopupText) {
+      successPopupText.textContent = "Uploading...";
+      successPopupIcon.remove(); // Verwijder oude icoon als die er is
+      successPopupText.parentNode.insertBefore(successPopupIcon, successPopupText);
+    }
 
-    //formdata voorbereiden:
-    let formData = new FormData(scoreForm);    
+    // FormData voorbereiden met het bestand
+    let formData = new FormData(snappUploadForm);    
 
-    // Data fetchen:
-    // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
-    // Gebruik daarvoor het action en method attribuut van het formulier
-    // Stuur de formulierelementen mee
-    const response = await fetch(scoreForm.action, {
-      method: scoreForm.method, //POST dus
-      body: new URLSearchParams(formData) // <<< Dit moet omdat server.js anders niet met de formulier data kan werken
-    })
+    try {
+      // Fetch naar de server met FormData (voor multipart/form-data)
+      const response = await fetch(snappUploadForm.action, {
+        method: snappUploadForm.method, // POST
+        body: formData // FormData zorgt automatisch voor multipart/form-data
+      })
 
-    // Data verwerken:
-    // De server geeft data terug als het posten goed gaat
-    const responseData = await response.text()
+      const result = await response.json();
 
-    // Normaal zou de browser die HTML parsen en weergeven, maar daar moeten we nu zelf iets mee
-    // Parse de nieuwe HTML en maak hiervan een nieuw Document Object Model in het geheugen
-    const parser = new DOMParser()
-    const responseDOM = parser.parseFromString(responseData, 'text/html')
+      if (response.ok && result.success) {
+        // Switch naar success state (zonder reload!)
+        await refreshPhotoGrid();
+        if (successPopupButton) {
+          successPopupButton.style.display = 'flex';
+        }
+        successPopupIcon.remove();
+        if (successPopupText) {
+          successPopupText.textContent = "Your snapp has been added successfully!";
+        }
+      } else {
+        throw new Error(result.message || "Upload failed");
+      }
 
-    // Zoek in die nieuwe HTML DOM onze nieuwe UI state op, die we via Liquid hebben klaargemaakt
-    const newState = responseDOM.querySelector('#score ol')
-
-    // data van de server toevoegen aan de DOM, aan de scorelijst in de ol
-    // Overschrijf de HTML met de nieuwe HTML
-    scores.innerHTML = newState.innerHTML
-
-    // Loading state weghalen
-    // Nu kan je waarschijnlijk de Loading state vervangen door een Success state
-    console.log("Loading state weghalen")
-    formButton.classList.remove("loading")
-    formButton.textContent = "Save score"
-
+    } catch (err) {
+      if (successPopupText) {
+        successPopupText.textContent = "Er is een fout opgetreden bij het uploaden: " + err.message;
+      }
+      if (successPopupButton) {
+        successPopupButton.style.display = 'flex';
+      }
+      successPopupIcon.remove();
+    }
   })
 </script>

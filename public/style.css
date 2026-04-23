@@ -155,7 +155,9 @@ nav {
     background: white;
     padding: 2rem;
     text-align: center;
+    width: min(300px, 90%);
     max-width: 300px;
+    min-height: 227px;
     -webkit-box-shadow: 0px 0px 15px 2px #000000; 
     box-shadow: 0px 0px 15px 2px #000000;
     display: flex;
