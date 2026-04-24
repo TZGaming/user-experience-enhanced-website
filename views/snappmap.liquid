@@ -33,10 +33,19 @@
           {% if snap.picture.id != null %}
             <li>
               <a href="/snapps/snappmap/{{ snap.uuid }}">
-                <img 
-                  type="image/webp" 
-                  src="https://fdnd-agency.directus.app/assets/{{ snap.picture.id }}?width=200&format=webp" 
-                  loading="lazy">
+                <picture>
+                  <source 
+                    type="image/webp" 
+                    srcset="https://fdnd-agency.directus.app/assets/{{ snap.picture.id }}?width=200&format=webp">
+
+                  <source 
+                    type="image/avif" 
+                    srcset="https://fdnd-agency.directus.app/assets/{{ snap.picture.id }}?width=200&format=avif">
+
+                  <img
+                    src="https://fdnd-agency.directus.app/assets/{{ snap.picture.id }}?width=200&format=jpg" 
+                    loading="lazy">
+                </picture>
               </a>
             </li>
           {% endif %}
