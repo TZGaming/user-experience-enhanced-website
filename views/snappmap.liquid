@@ -28,24 +28,17 @@
 
     <ul class="photo-grid">
       {% for item in snappmaps %}
-      {% assign sorted_snaps = item.snaps | sort: "date_created" | reverse %}
+        {% assign sorted_snaps = item.snaps | sort: "date_created" | reverse %}
         {% for snap in sorted_snaps %}
           {% if snap.picture.id != null %}
             <li>
               <a href="/snapps/snappmap/{{ snap.uuid }}">
-                <picture>
-                  <source 
-                    type="image/webp" 
-                    srcset="https://fdnd-agency.directus.app/assets/{{ snap.picture.id }}?width=200&format=webp">
+                {% assign directus_image_url = "https://fdnd-agency.directus.app/assets/" | append: snap.picture.id %}
 
-                  <source 
-                    type="image/avif" 
-                    srcset="https://fdnd-agency.directus.app/assets/{{ snap.picture.id }}?width=200&format=avif">
-
-                  <img
-                    src="https://fdnd-agency.directus.app/assets/{{ snap.picture.id }}?width=200&format=jpg" 
-                    loading="lazy">
-                </picture>
+                {% render 'partials/picture.liquid',
+                  imagesrc: directus_image_url,
+                  alt: "Foto van snapp",
+                %}
               </a>
             </li>
           {% endif %}
