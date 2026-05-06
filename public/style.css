@@ -49,8 +49,12 @@ nav {
         padding-right: 20px;
         color: white;
         font-family: 'Bariol', sans-serif;
-        font-weight: 700;
+        font-size: .9rem;
         fill: white;
+
+        h1 {
+            font-weight: 400;
+        }
 
         .snappmap-title {
             white-space: nowrap;
@@ -58,11 +62,13 @@ nav {
             max-width: 65%;
             text-overflow: ellipsis;
             display: block;
+            font-size: .9rem;
         }
 
         .snappmap-title h1 {
             display: inline;
             margin: 0;
+            font-weight: 400;
         }
 
         svg {
@@ -97,8 +103,7 @@ nav {
             .action-amount-container {
                 display: flex;
                 flex-direction: row;
-                align-items: center;
-                gap: 5px;
+                gap: 2px;
                 font-size: 22px;
                 font-weight: 400;
             }
