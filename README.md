@@ -29,7 +29,7 @@ Ook heb ik wat styling aanpassingen gedaan zoals de achtergrond van de popup een
   <tr>
     <td>
      <p>Before</p>
-     <img src="https://private-user-images.githubusercontent.com/82344380/572510531-487ed8f7-4dc6-4a5c-a586-602cba1c25c9.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzgzMjg3NDEsIm5iZiI6MTc3ODMyODQ0MSwicGF0aCI6Ii84MjM0NDM4MC81NzI1MTA1MzEtNDg3ZWQ4ZjctNGRjNi00YTVjLWE1ODYtNjAyY2JhMWMyNWM5LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjA1MDklMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwNTA5VDEyMDcyMVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTljOTk5NTU0MTIzOTI1OWUxYTI5NzZiMDczMzNkZWFmMTVlNmY2MjM2YzhiODNmNzhjY2NiZjlhYjMwOGFjNzEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JnJlc3BvbnNlLWNvbnRlbnQtdHlwZT1pbWFnZSUyRnBuZyJ9.ZVEb9CDmH_JIVtVBqR4kidV-VxxhwWDArUjrQRKaTpQ" width="221" alt="image1">
+     <img src="https://github.com/user-attachments/assets/487ed8f7-4dc6-4a5c-a586-602cba1c25c9" width="221" alt="image1">
     </td>
     <td>
      <p>After</p>
